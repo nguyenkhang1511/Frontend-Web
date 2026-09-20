@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Hệ thống Quản lý Đề tài</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ute: {
+                            blue: '#0056A6',      // Màu xanh chủ đạo từ Logo UTE
+                            darkblue: '#003F7A',  // Màu xanh đậm hover
+                            red: '#E31B23',       // Màu đỏ accent
+                            bg: '#F2F6FA'         // Màu nền dịu mắt
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-ute-bg min-h-screen flex items-center justify-center p-4 font-sans text-gray-800">
+
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-100">
+        <!-- Logo & Title -->
+        <div class="text-center mb-6">
+            <img src="../asset/ute logo.png" alt="HCMUTE Logo" class="h-20 mx-auto mb-3 object-contain">
+            <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">
+                TRƯỜNG ĐẠI HỌC CÔNG NGHỆ KỸ THUẬT TP.HCM
+            </p>
+            <h2 class="text-xs font-extrabold text-ute-blue uppercase tracking-wide">
+                HỆ THỐNG QUẢN LÝ ĐỀ TÀI
+            </h2>
+            <h1 class="text-2xl font-black text-gray-900 mt-4 mb-1">
+                ĐĂNG NHẬP
+            </h1>
+            <p class="text-xs text-gray-500">
+                Chưa có tài khoản? <a href="#" class="text-ute-blue font-semibold hover:underline">Tạo tài khoản</a>
+            </p>
+        </div>
+
+        <!-- Form Đăng Nhập -->
+        <form onsubmit="handleLogin(event)" class="space-y-4">
+            <!-- Email -->
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">
+                    Email <span class="text-ute-red">*</span>
+                </label>
+                <input type="text" id="username" required placeholder="Nhập Email hoặc Mã định danh..."
+                    class="w-full px-4 py-2.5 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-ute-blue focus:border-transparent transition">
+            </div>
+
+            <!-- Mật khẩu -->
+            <div>
+                <div class="flex justify-between items-center mb-1">
+                    <label class="block text-xs font-bold text-gray-700">
+                        Mật khẩu <span class="text-ute-red">*</span>
+                    </label>
+                    <i class="fa-regular fa-circle-question text-gray-400 text-xs cursor-pointer" title="Trợ giúp mật khẩu"></i>
+                </div>
+                <div class="relative">
+                    <input type="password" id="password" required placeholder="••••••••"
+                        class="w-full px-4 py-2.5 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-ute-blue focus:border-transparent transition pr-10">
+                    <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                        <i id="eye-icon" class="fa-regular fa-eye-slash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quên mật khẩu -->
+            <div class="text-right text-xs">
+                <a href="#" class="text-ute-blue font-semibold hover:underline">Quên mật khẩu?</a>
+            </div>
+
+            <!-- Nút Đăng nhập -->
+            <button type="submit"
+                class="w-full py-3 bg-ute-blue hover:bg-ute-darkblue text-white font-bold rounded-xl shadow-md transition-all duration-200 flex items-center justify-center space-x-2 text-sm mt-2">
+                <i class="fa-solid fa-user"></i>
+                <span>Đăng nhập</span>
+            </button>
+        </form>
+
+        <!-- Phân cách -->
+        <div class="relative my-6 text-center">
+            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+            <span class="relative bg-white px-3 text-xs text-gray-400 font-medium">Hoặc</span>
+        </div>
+
+        <!-- Nút Đăng nhập Google -->
+        <button type="button" onclick="loginWithGoogle()"
+            class="w-full py-2.5 bg-[#6366f1] hover:bg-[#4f46e5] text-white font-semibold rounded-xl text-sm transition flex items-center justify-center space-x-2 shadow-sm">
+            <i class="fa-brands fa-google"></i>
+            <span>Đăng nhập với Google</span>
+        </button>
+    </div>
+
+    <!-- Script điều hướng -->
+    <script>
+    function togglePassword() {
+        const passInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eye-icon');
+        if (passInput.type === 'password') {
+            passInput.type = 'text';
+            eyeIcon.className = 'fa-regular fa-eye';
+        } else {
+            passInput.type = 'password';
+            eyeIcon.className = 'fa-regular fa-eye-slash';
+        }
+    }
+
+    // Xử lý khi nhấn nút Đăng Nhập
+    function handleLogin(event) {
+        event.preventDefault();
+        
+        // Chuyển sang admin.html cùng thư mục admin
+        window.location.href = './admin.html';
+    }
+
+    // Xử lý khi nhấn nút Đăng nhập bằng Google
+    function loginWithGoogle() {
+        window.location.href = './admin.html';
+    }
+    </script>
+</body>
+</html>

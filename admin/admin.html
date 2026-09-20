@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Quản lý Đề tài - Trưởng Khoa</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pms: {
+                            header: '#0080a7',
+                            headerHover: '#006d8e',
+                            cardBlue: '#2355a4',
+                            bg: '#f0f4f8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .nav-btn.active {
+            background-color: rgba(255, 255, 255, 0.25);
+            font-weight: 700;
+            border-bottom: 3px solid #ffffff;
+        }
+    </style>
+</head>
+<body class="bg-pms-bg font-sans text-gray-800 antialiased min-h-screen">
+
+    <!-- TOP NAVIGATION BAR (ĐÃ ĐƯỢC CẢI TIẾN KHOẢNG CÁCH) -->
+    <header class="bg-pms-header text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-[1440px] mx-auto px-6 flex items-center justify-between h-16 gap-4">
+            
+            <!-- Logo & Brand (Tạo khoảng cách rộng rãi với Logo & Tiêu đề) -->
+            <div class="flex items-center space-x-4 shrink-0 pr-5 border-r border-cyan-600/40">
+                <div class="bg-white p-1.5 rounded-lg shadow-sm flex items-center justify-center">
+                    <img src="./asset/ute logo.png" onerror="this.onerror=null; this.src='../asset/ute logo.png';" alt="HCMUTE Logo" class="h-9 w-auto object-contain">
+                </div>
+                <div class="space-y-0.5">
+                    <h1 class="text-[10px] font-bold tracking-wider uppercase text-cyan-100 leading-none">TRƯỜNG ĐẠI HỌC CÔNG NGHỆ KỸ THUẬT TP.HCM</h1>
+                    <p class="text-sm font-black uppercase tracking-wide leading-tight text-white mt-0.5">HỆ THỐNG QUẢN LÝ ĐỀ TÀI</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links (5 Chức Năng - Tăng khoảng cách & padding giữa các nút) -->
+            <nav class="hidden lg:flex items-center space-x-2 text-sm font-medium h-full pt-1">
+                <button onclick="switchTab('trang-chu')" id="btn-trang-chu" class="nav-btn active px-4 py-2 rounded-t-md hover:bg-pms-headerHover text-white flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-house text-xs"></i>
+                    <span>Trang chủ</span>
+                </button>
+                <button onclick="switchTab('dot-dang-ky')" id="btn-dot-dang-ky" class="nav-btn px-4 py-2 rounded-t-md hover:bg-pms-headerHover text-cyan-50 flex items-center space-x-2 transition">
+                    <i class="fa-regular fa-calendar-days text-xs"></i>
+                    <span>Đợt Đăng Ký</span>
+                </button>
+                <button onclick="switchTab('duyet-de-tai')" id="btn-duyet-de-tai" class="nav-btn px-4 py-2 rounded-t-md hover:bg-pms-headerHover text-cyan-50 flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-file-signature text-xs"></i>
+                    <span>Duyệt Đề Tài</span>
+                </button>
+                <button onclick="switchTab('hoi-dong')" id="btn-hoi-dong" class="nav-btn px-4 py-2 rounded-t-md hover:bg-pms-headerHover text-cyan-50 flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-gavel text-xs"></i>
+                    <span>Hội Đồng Phản Biện</span>
+                </button>
+                <button onclick="switchTab('thong-bao')" id="btn-thong-bao" class="nav-btn px-4 py-2 rounded-t-md hover:bg-pms-headerHover text-cyan-50 flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-bullhorn text-xs"></i>
+                    <span>Thông Báo & Điểm</span>
+                </button>
+            </nav>
+
+            <!-- User Profile & Logout -->
+            <div class="flex items-center space-x-4 shrink-0">
+                <button class="relative p-2 text-cyan-100 hover:text-white transition rounded-full hover:bg-white/10">
+                    <i class="fa-regular fa-bell text-lg"></i>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-pms-header"></span>
+                </button>
+
+                <div class="flex items-center space-x-3 pl-3 border-l border-cyan-600/50">
+                    <div class="text-right hidden sm:block">
+                        <div class="text-xs font-bold text-white">GS.TS. Nguyễn Văn Trường</div>
+                        <div class="text-[10px] text-cyan-200">Trưởng Khoa CNTT</div>
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-blue-900 text-white font-bold flex items-center justify-center text-xs border-2 border-white/40 shadow-sm">
+                        TK
+                    </div>
+                </div>
+
+                <a href="./login.html" title="Đăng xuất" class="text-cyan-100 hover:text-white transition p-2 rounded-full hover:bg-white/10">
+                    <i class="fa-solid fa-right-from-bracket text-base"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-[1440px] mx-auto px-6 py-6">
+
+        <!-- ================= TAB 1: TRANG CHỦ ================= -->
+        <section id="tab-trang-chu" class="tab-content block space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Tổng quan hệ thống</h2>
+                    <p class="text-xs text-gray-500">Báo cáo tình hình quản lý đề tài nghiên cứu khoa học</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left Main Content -->
+                <div class="lg:col-span-8 space-y-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 overflow-hidden">
+                        <div class="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
+                            <h3 class="font-bold text-gray-800 text-sm flex items-center space-x-2">
+                                <span class="w-2 h-2 rounded-full bg-pms-header"></span>
+                                <span>Đợt Đăng Ký Đề Tài Hiện Hành</span>
+                            </h3>
+                            <span class="text-xs bg-blue-50 text-pms-header px-2.5 py-1 rounded-full font-semibold">2 đợt đang mở</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs text-gray-600">
+                                <thead class="bg-gray-50 text-gray-700 uppercase font-bold border-b border-gray-200">
+                                    <tr>
+                                        <th class="px-4 py-3">Tên đợt</th>
+                                        <th class="px-4 py-3">Mô tả</th>
+                                        <th class="px-4 py-3">Hạn nộp</th>
+                                        <th class="px-4 py-3 text-center">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr class="hover:bg-gray-50/80">
+                                        <td class="px-4 py-3.5 font-bold text-gray-800">NCKH Sinh viên 2026</td>
+                                        <td class="px-4 py-3 text-gray-500">Các đề tài thuộc chuỗi nghiên cứu ứng dụng CNTT...</td>
+                                        <td class="px-4 py-3 text-red-600 font-semibold">31/12/2026</td>
+                                        <td class="px-4 py-3 text-center">
+                                            <button onclick="switchTab('dot-dang-ky')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-medium shadow-sm">Xem chi tiết</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50/80">
+                                        <td class="px-4 py-3.5 font-bold text-gray-800">Đề tài Giảng viên Cấp Trường</td>
+                                        <td class="px-4 py-3 text-gray-500">Phê duyệt danh mục các đề tài trọng điểm năm 2026...</td>
+                                        <td class="px-4 py-3 text-red-600 font-semibold">15/10/2026</td>
+                                        <td class="px-4 py-3 text-center">
+                                            <button onclick="switchTab('dot-dang-ky')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-medium shadow-sm">Xem chi tiết</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+                        <h3 class="font-bold text-gray-800 text-sm mb-3 flex items-center space-x-2">
+                            <i class="fa-solid fa-circle-info text-pms-header text-base"></i>
+                            <span>Hướng dẫn cho Trưởng Khoa (Owner)</span>
+                        </h3>
+                        <ul class="space-y-2 text-xs text-gray-600">
+                            <li class="flex items-start space-x-2">
+                                <span class="font-bold text-gray-800 whitespace-nowrap">• Giai đoạn 1:</span>
+                                <span>Tạo đợt đăng ký & Tiếp nhận/Duyệt danh sách đề tài từ Giảng viên.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="font-bold text-gray-800 whitespace-nowrap">• Giai đoạn 2:</span>
+                                <span>Mở đợt cho Sinh viên đăng ký nhóm, Thành lập hội đồng phản biện và Công bố kết quả.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Right Cards -->
+                <div class="lg:col-span-4 space-y-5">
+                    <div class="bg-pms-cardBlue text-white rounded-xl p-5 shadow-md">
+                        <h4 class="text-sm font-bold tracking-wide text-center mb-4 border-b border-blue-400/40 pb-2 uppercase">Hội Đồng Phản Biện</h4>
+                        <div class="grid grid-cols-2 gap-4 text-center">
+                            <div class="bg-white/10 rounded-lg p-3">
+                                <div class="text-2xl font-black text-amber-300">1</div>
+                                <div class="text-[11px] text-blue-100">Số hội đồng chưa đánh giá</div>
+                            </div>
+                            <div class="bg-white/10 rounded-lg p-3">
+                                <div class="text-2xl font-black text-white">1</div>
+                                <div class="text-[11px] text-blue-100">Tổng số hội đồng</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-pms-cardBlue text-white rounded-xl p-5 shadow-md">
+                        <h4 class="text-sm font-bold tracking-wide text-center mb-4 border-b border-blue-400/40 pb-2 uppercase">Số Lượng Đề Tài & Đợt</h4>
+                        <div class="grid grid-cols-3 gap-2 text-center">
+                            <div class="bg-white/10 rounded-lg p-2.5">
+                                <div class="text-xl font-black text-white">2</div>
+                                <div class="text-[10px] text-blue-100">Đợt đăng ký</div>
+                            </div>
+                            <div class="bg-white/10 rounded-lg p-2.5">
+                                <div class="text-xl font-black text-emerald-300">3</div>
+                                <div class="text-[10px] text-blue-100">Đã đề xuất</div>
+                            </div>
+                            <div class="bg-white/10 rounded-lg p-2.5">
+                                <div class="text-xl font-black text-amber-300">2</div>
+                                <div class="text-[10px] text-blue-100">Chờ phê duyệt</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: ĐỢT ĐĂNG KÝ ================= -->
+        <section id="tab-dot-dang-ky" class="tab-content hidden space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Quản lý Đợt Đăng Ký</h2>
+                    <p class="text-xs text-gray-500">Tạo mới và cấu hình thời gian nhận hồ sơ đề tài</p>
+                </div>
+                <button class="px-4 py-2 bg-pms-header hover:bg-pms-headerHover text-white font-bold rounded-lg text-xs shadow flex items-center space-x-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Tạo Đợt Đăng Ký Mới</span>
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-600">
+                        <thead class="bg-gray-100 text-gray-700 uppercase font-bold border-b border-gray-200">
+                            <tr>
+                                <th class="px-4 py-3">STT</th>
+                                <th class="px-4 py-3">Tên Đợt</th>
+                                <th class="px-4 py-3">Ngày Bắt Đầu</th>
+                                <th class="px-4 py-3">Hạn Nộp Hồ Sơ</th>
+                                <th class="px-4 py-3">Trạng Thái</th>
+                                <th class="px-4 py-3 text-center">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr>
+                                <td class="px-4 py-3 font-bold">1</td>
+                                <td class="px-4 py-3 font-bold text-gray-800">NCKH Sinh viên 2026</td>
+                                <td class="px-4 py-3">01/01/2026</td>
+                                <td class="px-4 py-3 text-red-600 font-semibold">31/12/2026</td>
+                                <td class="px-4 py-3"><span class="bg-green-100 text-green-700 px-2 py-0.5 rounded font-bold">Đang mở</span></td>
+                                <td class="px-4 py-3 text-center space-x-2">
+                                    <button class="text-blue-600 hover:underline"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
+                                    <button class="text-red-600 hover:underline"><i class="fa-solid fa-trash"></i> Xóa</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-bold">2</td>
+                                <td class="px-4 py-3 font-bold text-gray-800">Đề tài Giảng viên Cấp Trường</td>
+                                <td class="px-4 py-3">15/02/2026</td>
+                                <td class="px-4 py-3 text-red-600 font-semibold">15/10/2026</td>
+                                <td class="px-4 py-3"><span class="bg-green-100 text-green-700 px-2 py-0.5 rounded font-bold">Đang mở</span></td>
+                                <td class="px-4 py-3 text-center space-x-2">
+                                    <button class="text-blue-600 hover:underline"><i class="fa-solid fa-pen-to-square"></i> Sửa</button>
+                                    <button class="text-red-600 hover:underline"><i class="fa-solid fa-trash"></i> Xóa</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: DUYỆT ĐỀ TÀI ================= -->
+        <section id="tab-duyet-de-tai" class="tab-content hidden space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Danh Sách Đề Tài Đề Xuất</h2>
+                    <p class="text-xs text-gray-500">Phê duyệt danh mục đề tài từ Giảng viên gửi lên Khoa</p>
+                </div>
+                <div class="flex space-x-2">
+                    <select class="text-xs border border-gray-300 rounded-lg px-3 py-1.5 bg-white focus:outline-none">
+                        <option>Tất cả đợt đăng ký</option>
+                        <option>NCKH Sinh viên 2026</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-600">
+                        <thead class="bg-gray-100 text-gray-700 uppercase font-bold border-b border-gray-200">
+                            <tr>
+                                <th class="px-4 py-3">Mã ĐT</th>
+                                <th class="px-4 py-3">Tên Đề Tài</th>
+                                <th class="px-4 py-3">Chủ Nhiệm / Giảng Viên</th>
+                                <th class="px-4 py-3">Kinh Phí (Đ)</th>
+                                <th class="px-4 py-3">Trạng Thái</th>
+                                <th class="px-4 py-3 text-center">Phê Duyệt</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr>
+                                <td class="px-4 py-3 font-bold">DT01</td>
+                                <td class="px-4 py-3 font-bold text-gray-800">Xây dựng ứng dụng AI nhận diện khuôn mặt sinh viên</td>
+                                <td class="px-4 py-3">TS. Trần Văn A</td>
+                                <td class="px-4 py-3 font-semibold">15.000.000</td>
+                                <td class="px-4 py-3"><span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded font-bold">Chờ duyệt</span></td>
+                                <td class="px-4 py-3 text-center space-x-2">
+                                    <button class="px-2.5 py-1 bg-emerald-600 text-white rounded hover:bg-emerald-700">Duyệt</button>
+                                    <button class="px-2.5 py-1 bg-red-500 text-white rounded hover:bg-red-600">Từ chối</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-bold">DT02</td>
+                                <td class="px-4 py-3 font-bold text-gray-800">Hệ thống quản lý chuỗi cung ứng bằng Blockchain</td>
+                                <td class="px-4 py-3">ThS. Lê Thị B</td>
+                                <td class="px-4 py-3 font-semibold">20.000.000</td>
+                                <td class="px-4 py-3"><span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-bold">Đã duyệt</span></td>
+                                <td class="px-4 py-3 text-center">
+                                    <span class="text-xs text-gray-400 italic">Đã xử lý</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: HỘI ĐỒNG PHẢN BIỆN ================= -->
+        <section id="tab-hoi-dong" class="tab-content hidden space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Thành Lập & Quản Lý Hội Đồng</h2>
+                    <p class="text-xs text-gray-500">Phân công cán bộ phản biện và lịch đánh giá nghiệm thu</p>
+                </div>
+                <button class="px-4 py-2 bg-pms-header text-white font-bold rounded-lg text-xs shadow hover:bg-pms-headerHover">
+                    <i class="fa-solid fa-user-plus mr-1"></i> Tạo Hội Đồng Mới
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+                <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50/50">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-bold text-sm text-pms-header">Hội Đồng 01: Đánh Giá Đề Tài CNTT Học Kỳ 1 - 2026</h3>
+                        <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">Chưa hoàn tất</span>
+                    </div>
+                    <p class="text-xs text-gray-500 mb-3">Ngày làm việc: 25/11/2026 | Địa điểm: Phòng A2-301</p>
+                    <div class="text-xs space-y-1">
+                        <div><strong>Chủ tịch:</strong> GS.TS. Nguyễn Văn Trường</div>
+                        <div><strong>Thư ký:</strong> TS. Hoàng Văn C</div>
+                        <div><strong>Ủy viên phản biện:</strong> TS. Phạm Văn D</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: THÔNG BÁO & ĐIỂM ================= -->
+        <section id="tab-thong-bao" class="tab-content hidden space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">Thông Báo & Kết Quả Đánh Giá</h2>
+                    <p class="text-xs text-gray-500">Đăng tin thông báo chung và tổng hợp kết quả điểm đề tài</p>
+                </div>
+                <button class="px-4 py-2 bg-pms-header text-white font-bold rounded-lg text-xs shadow hover:bg-pms-headerHover">
+                    <i class="fa-solid fa-bullhorn mr-1"></i> Đăng Thông Báo Mới
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Danh sách thông báo -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+                    <h3 class="font-bold text-sm text-gray-800 mb-3 border-b pb-2">Tin Thông Báo Đã Đăng</h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                            <div class="font-bold text-gray-800 mb-1">Thông báo mở đợt đăng ký NCKH Sinh viên 2026</div>
+                            <div class="text-gray-400 text-[10px]">Đăng ngày: 10/01/2026</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bảng điểm tổng hợp -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200/80 p-5">
+                    <h3 class="font-bold text-sm text-gray-800 mb-3 border-b pb-2">Bảng Điểm Đề Tài Đã Phản Biện</h3>
+                    <div class="text-xs text-gray-500 italic">Chưa có kết quả phản biện nào được công bố.</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JS ĐIỀU HƯỚNG CHUYỂN TAB -->
+    <script>
+        function switchTab(tabId) {
+            // Ẩn tất cả nội dung các Tab
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.add('hidden'));
+
+            // Bỏ trạng thái Active của tất cả các nút bấm trên Menu
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => btn.classList.remove('active'));
+
+            // Hiển thị Tab được chọn
+            const selectedTab = document.getElementById('tab-' + tabId);
+            if (selectedTab) {
+                selectedTab.classList.remove('hidden');
+            }
+
+            // Active nút bấm tương ứng trên Menu
+            const selectedBtn = document.getElementById('btn-' + tabId);
+            if (selectedBtn) {
+                selectedBtn.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>
