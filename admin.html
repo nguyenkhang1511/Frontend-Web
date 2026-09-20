@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Quản lý Đề tài - Trưởng Khoa (Owner)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans antialiased text-gray-800">
+
+    <div class="min-h-screen flex flex-col md:flex-row">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="w-full md:w-64 bg-slate-900 text-white flex-shrink-0">
+            <div class="p-5 border-b border-slate-800 flex items-center space-x-3">
+                <i class="fa-solid fa-graduation-cap text-indigo-400 text-2xl"></i>
+                <div>
+                    <h1 class="font-bold text-base leading-tight">QL Đề Tài CNTT</h1>
+                    <span class="text-xs text-slate-400">Giao diện Trưởng Khoa</span>
+                </div>
+            </div>
+            
+            <nav class="p-4 space-y-1 text-sm font-medium">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition bg-indigo-600 text-white">
+                    <i class="fa-solid fa-chart-pie w-5"></i>
+                    <span>Tổng quan</span>
+                </button>
+                <button onclick="switchTab('rounds')" id="nav-rounds" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-slate-800">
+                    <i class="fa-solid fa-calendar-days w-5"></i>
+                    <span>Đợt Đăng Ký</span>
+                </button>
+                <button onclick="switchTab('topics')" id="nav-topics" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-slate-800">
+                    <i class="fa-solid fa-book-bookmark w-5"></i>
+                    <span>Duyệt Đề Tài</span>
+                </button>
+                <button onclick="switchTab('councils')" id="nav-councils" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-slate-800">
+                    <i class="fa-solid fa-users-rectangle w-5"></i>
+                    <span>Hội Đồng Phản Biện</span>
+                </button>
+                <button onclick="switchTab('announcements')" id="nav-announcements" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-slate-800">
+                    <i class="fa-solid fa-bullhorn w-5"></i>
+                    <span>Thông Báo & Điểm</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            
+            <!-- HEADER BAR -->
+            <header class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
+                <h2 id="page-title" class="text-xl font-bold text-gray-800">Tổng quan hệ thống</h2>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-semibold text-gray-900">GS.TS. Nguyễn Văn Trưởng</p>
+                        <p class="text-xs text-gray-500">Trưởng Khoa CNTT</p>
+                    </div>
+                    <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-bold border border-indigo-200">
+                        TK
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENTS -->
+            <div class="p-6 overflow-y-auto flex-1 space-y-6">
+                
+                <!-- 1. DASHBOARD TAB -->
+                <section id="tab-dashboard" class="tab-content block space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase">Đợt Đăng Ký</p>
+                                <p id="stat-rounds" class="text-2xl font-bold text-gray-900 mt-1">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase">Đề Tài Đã Đề Xuất</p>
+                                <p id="stat-topics" class="text-2xl font-bold text-gray-900 mt-1">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-file-signature"></i>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase">Chờ Phê Duyệt</p>
+                                <p id="stat-pending" class="text-2xl font-bold text-amber-600 mt-1">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-hourglass-half"></i>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase">Hội Đồng Phản Biện</p>
+                                <p id="stat-councils" class="text-2xl font-bold text-purple-600 mt-1">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-gavel"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                        <h3 class="font-bold text-gray-800 text-lg mb-3">Hướng dẫn cho Trưởng Khoa (Owner)</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Hệ thống tự động hóa toàn bộ quy trình quản lý đề tài bao gồm 2 giai đoạn chính: 
+                            <br>• <strong>Giai đoạn 1:</strong> Tạo đợt đăng ký & Tiếp nhận/Duyệt danh sách đề tài từ Giảng viên.
+                            <br>• <strong>Giai đoạn 2:</strong> Mở đợt cho Sinh viên đăng ký nhóm, Thành lập hội đồng phản biện và Công bố kết quả.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- 2. ĐỢT ĐĂNG KÝ TAB -->
+                <section id="tab-rounds" class="tab-content hidden space-y-5">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-base font-bold text-gray-800">Danh sách các Đợt đăng ký</h3>
+                        <button onclick="openModal('modal-add-round')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow-sm transition">
+                            <i class="fa-solid fa-plus"></i> Tạo Đợt Đăng Ký Mới
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase border-b border-gray-200">
+                                <tr>
+                                    <th class="p-4">Tên Đợt</th>
+                                    <th class="p-4">Loại Đợt</th>
+                                    <th class="p-4">Thời gian GV</th>
+                                    <th class="p-4">Thời gian SV</th>
+                                    <th class="p-4">Hạn GVPB / Hội Đồng</th>
+                                    <th class="p-4 text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="round-table-body" class="divide-y divide-gray-100 text-sm">
+                                <!-- Data rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 3. PHÊ DUYỆT ĐỀ TÀI TAB -->
+                <section id="tab-topics" class="tab-content hidden space-y-5">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <select id="filter-dept" onchange="renderTopics()" class="border border-gray-300 rounded-xl p-2.5 text-sm bg-white focus:ring-2 focus:ring-indigo-500">
+                                <option value="ALL">Tất cả Bộ môn</option>
+                                <option value="KTPM">Kỹ thuật Phần mềm</option>
+                                <option value="HTTT">Hệ thống Thông tin</option>
+                                <option value="MMT">Mạng máy tính & Truyền thông</option>
+                            </select>
+                            <select id="filter-status" onchange="renderTopics()" class="border border-gray-300 rounded-xl p-2.5 text-sm bg-white focus:ring-2 focus:ring-indigo-500">
+                                <option value="ALL">Tất cả Trạng thái</option>
+                                <option value="PENDING">Chờ duyệt</option>
+                                <option value="APPROVED">Đã duyệt</option>
+                                <option value="REJECTED">Từ chối</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase border-b border-gray-200">
+                                <tr>
+                                    <th class="p-4">Tên Đề Tài</th>
+                                    <th class="p-4">Bộ Môn</th>
+                                    <th class="p-4">GV Hướng Dẫn</th>
+                                    <th class="p-4">Trạng Thái</th>
+                                    <th class="p-4 text-center">Xử Lý Phê Duyệt</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topic-table-body" class="divide-y divide-gray-100 text-sm">
+                                <!-- Data rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 4. HỘI ĐỒNG PHẢN BIỆN TAB -->
+                <section id="tab-councils" class="tab-content hidden space-y-5">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-base font-bold text-gray-800">Danh sách Hội đồng Phản biện</h3>
+                        <button onclick="openModal('modal-add-council')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow-sm transition">
+                            <i class="fa-solid fa-plus"></i> Lập Hội Đồng Mới
+                        </button>
+                    </div>
+
+                    <div id="council-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Data rendered by JS -->
+                    </div>
+                </section>
+
+                <!-- 5. THÔNG BÁO TAB -->
+                <section id="tab-announcements" class="tab-content hidden space-y-5">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+                        <h3 class="font-bold text-gray-800 text-base border-b pb-3">Đăng Thông Báo Chính Thức</h3>
+                        <form id="form-announcement" onsubmit="handlePostAnnouncement(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tiêu đề thông báo</label>
+                                <input id="anno-title" type="text" required placeholder="Nội dung tiêu đề thông báo..." class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nội dung chi tiết</label>
+                                <textarea id="anno-content" rows="4" required placeholder="Thông báo thời gian, quy định nộp báo cáo..." class="w-full border border-gray-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-indigo-500"></textarea>
+                            </div>
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition">
+                                Đăng Thông Báo
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: TẠO ĐỢT ĐĂNG KÝ -->
+    <div id="modal-add-round" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-xl max-w-xl w-full p-6 space-y-5 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-base font-bold text-gray-800">Tạo Đợt Đăng Ký Đề Tài Mới</h3>
+                <button onclick="closeModal('modal-add-round')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="form-create-round" onsubmit="handleCreateRound(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tên Đợt Đăng Ký</label>
+                    <input id="round-name" type="text" required placeholder="VD: Khóa Luận Tốt Nghiệp HK1 2026" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Loại Đợt Đăng Ký</label>
+                    <select id="round-type" onchange="handleTypeChange(this.value)" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm">
+                        <option value="MON_HOC">Môn Học Chuyên Ngành</option>
+                        <option value="NCKH">Nghiên Cứu Khoa Học (NCKH)</option>
+                        <option value="TLCN">Tiểu Luận Chuyên Ngành (TLCN)</option>
+                        <option value="KLTN">Khóa Luận Tốt Nghiệp (KLTN)</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">GV Bắt Đầu</label>
+                        <input id="round-gv-start" type="date" required class="w-full border border-gray-300 rounded-xl p-2.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">GV Kết Thúc</label>
+                        <input id="round-gv-end" type="date" required class="w-full border border-gray-300 rounded-xl p-2.5 text-sm">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">SV Bắt Đầu</label>
+                        <input id="round-sv-start" type="date" required class="w-full border border-gray-300 rounded-xl p-2.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">SV Kết Thúc</label>
+                        <input id="round-sv-end" type="date" required class="w-full border border-gray-300 rounded-xl p-2.5 text-sm">
+                    </div>
+                </div>
+
+                <!-- Ẩn/Hiện Động Theo Quy Định Nghiệp Vụ -->
+                <div id="field-gvpb" class="hidden">
+                    <label class="block text-xs font-semibold text-amber-700 mb-1">Hạn Chót GVPB Nộp Điểm (TLCN/KLTN)</label>
+                    <input id="round-gvpb-deadline" type="date" class="w-full border border-amber-300 bg-amber-50 rounded-xl p-2.5 text-sm">
+                </div>
+
+                <div id="field-council" class="hidden">
+                    <label class="block text-xs font-semibold text-indigo-700 mb-1">Ngày Báo Cáo Hội Đồng (KLTN)</label>
+                    <input id="round-council-date" type="date" class="w-full border border-indigo-300 bg-indigo-50 rounded-xl p-2.5 text-sm">
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-3 border-t">
+                    <button type="button" onclick="closeModal('modal-add-round')" class="px-4 py-2 border rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50">Hủy</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-medium hover:bg-indigo-700 transition">Tạo Mới</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: LẬP HỘI ĐỒNG PHẢN BIỆN -->
+    <div id="modal-add-council" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-base font-bold text-gray-800">Thành Lập Hội Đồng Phản Biện</h3>
+                <button onclick="closeModal('modal-add-council')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="form-create-council" onsubmit="handleCreateCouncil(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Tên Hội Đồng</label>
+                    <input id="council-name" type="text" required placeholder="VD: Hội đồng KTPM 01" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Chủ Tịch Hội Đồng</label>
+                    <input id="council-president" type="text" required placeholder="PGS.TS. Lê Văn A" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Thư Ký Hội Đồng</label>
+                    <input id="council-secretary" type="text" required placeholder="ThS. Nguyễn Thị B" class="w-full border border-gray-300 rounded-xl p-2.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Số Lượng Ủy Viên Giảng Viên (3 - 5 GV)</label>
+                    <input id="council-members-count" type="number" min="3" max="5" value="3" required class="w-full border border-gray-300 rounded-xl p-2.5 text-sm">
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-3 border-t">
+                    <button type="button" onclick="closeModal('modal-add-council')" class="px-4 py-2 border rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50">Hủy</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-medium hover:bg-indigo-700 transition">Thành Lập</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC GIẢ LẬP BACKEND (LOCALSTORAGE) -->
+    <script>
+        // DỮ LIỆU MẪU KHỞI TẠO NẾU LOCALSTORAGE RỖNG
+        const defaultRounds = [
+            { id: 101, name: "Khóa Luận Tốt Nghiệp HK1 2026", type: "KLTN", gvStart: "2026-05-01", gvEnd: "2026-05-15", svStart: "2026-05-16", svEnd: "2026-05-30", gvpbDeadline: "2026-06-20", councilDate: "2026-06-25" },
+            { id: 102, name: "Nghiên Cứu Khoa Học Sinh Viên 2026", type: "NCKH", gvStart: "2026-06-01", gvEnd: "2026-06-10", svStart: "2026-06-11", svEnd: "2026-06-25", gvpbDeadline: "", councilDate: "" }
+        ];
+
+        const defaultTopics = [
+            { id: 1, name: "Xây dựng hệ thống Microservices Ecommerce", dept: "KTPM", gv1: "TS. Nguyễn Văn A", gv2: "ThS. Trần Văn B", status: "PENDING" },
+            { id: 2, name: "Phân tích Dữ liệu Chuỗi cung ứng bằng AI", dept: "HTTT", gv1: "PGS.TS. Lê Thị C", gv2: "", status: "APPROVED" },
+            { id: 3, name: "Tối ưu hóa Mạng 5G trong Tòa nhà", dept: "MMT", gv1: "TS. Phạm Văn D", gv2: "", status: "PENDING" }
+        ];
+
+        const defaultCouncils = [
+            { id: 1, name: "Hội đồng KTPM - Đợt 1", president: "PGS.TS. Lê Văn X", secretary: "ThS. Nguyễn Thị Y", count: 5 }
+        ];
+
+        // KHỞI TẠO DỮ LIỆU
+        function initStorage() {
+            if (!localStorage.getItem('rounds')) localStorage.setItem('rounds', JSON.stringify(defaultRounds));
+            if (!localStorage.getItem('topics')) localStorage.setItem('topics', JSON.stringify(defaultTopics));
+            if (!localStorage.getItem('councils')) localStorage.setItem('councils', JSON.stringify(defaultCouncils));
+        }
+
+        // CHUYỂN TAB GIAO DIỆN
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-indigo-600', 'text-white');
+                el.classList.add('text-slate-300');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            activeNav.classList.add('bg-indigo-600', 'text-white');
+            activeNav.classList.remove('text-slate-300');
+
+            const pageTitles = {
+                'dashboard': 'Tổng quan hệ thống',
+                'rounds': 'Quản lý Đợt Đăng Ký Đề Tài',
+                'topics': 'Phê Duyệt Danh Sách Đề Tài',
+                'councils': 'Thành Lập Hội Đồng Phản Biện',
+                'announcements': 'Thông Báo & Kết Quả'
+            };
+            document.getElementById('page-title').innerText = pageTitles[tabId];
+            refreshAll();
+        }
+
+        // XỬ LÝ ẨN/HIỆN INPUT FORM ĐỜT ĐĂNG KÝ
+        function handleTypeChange(type) {
+            const fieldGvpb = document.getElementById('field-gvpb');
+            const fieldCouncil = document.getElementById('field-council');
+
+            fieldGvpb.classList.add('hidden');
+            fieldCouncil.classList.add('hidden');
+
+            if (type === 'TLCN' || type === 'KLTN') fieldGvpb.classList.remove('hidden');
+            if (type === 'KLTN') fieldCouncil.classList.remove('hidden');
+        }
+
+        // RENDER DỮ LIỆU RA GIAO DIỆN
+        function renderRounds() {
+            const rounds = JSON.parse(localStorage.getItem('rounds')) || [];
+            const tbody = document.getElementById('round-table-body');
+            
+            tbody.innerHTML = rounds.map(r => `
+                <tr class="hover:bg-gray-50/50">
+                    <td class="p-4 font-semibold text-gray-900">${r.name}</td>
+                    <td class="p-4">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${r.type === 'KLTN' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}">
+                            ${r.type}
+                        </span>
+                    </td>
+                    <td class="p-4 text-gray-600 text-xs">${r.gvStart} đến ${r.gvEnd}</td>
+                    <td class="p-4 text-gray-600 text-xs">${r.svStart} đến ${r.svEnd}</td>
+                    <td class="p-4 text-xs text-gray-600">
+                        ${r.gvpbDeadline ? `GVPB: ${r.gvpbDeadline}<br>` : ''}
+                        ${r.councilDate ? `<span class="text-indigo-600 font-medium">Báo cáo: ${r.councilDate}</span>` : 'N/A'}
+                    </td>
+                    <td class="p-4 text-center space-x-2">
+                        <button onclick="deleteRound(${r.id})" class="text-red-500 hover:text-red-700 text-base"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderTopics() {
+            const topics = JSON.parse(localStorage.getItem('topics')) || [];
+            const deptFilter = document.getElementById('filter-dept').value;
+            const statusFilter = document.getElementById('filter-status').value;
+            const tbody = document.getElementById('topic-table-body');
+
+            const filtered = topics.filter(t => {
+                const matchDept = deptFilter === 'ALL' || t.dept === deptFilter;
+                const matchStatus = statusFilter === 'ALL' || t.status === statusFilter;
+                return matchDept && matchStatus;
+            });
+
+            tbody.innerHTML = filtered.map(t => `
+                <tr class="hover:bg-gray-50/50">
+                    <td class="p-4 font-medium text-gray-900">${t.name}</td>
+                    <td class="p-4"><span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium">${t.dept}</span></td>
+                    <td class="p-4 text-xs text-gray-600">${t.gv1} ${t.gv2 ? `<br><span class="text-gray-400">+ ${t.gv2}</span>` : ''}</td>
+                    <td class="p-4">
+                        ${t.status === 'PENDING' ? '<span class="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full text-xs font-semibold">Chờ duyệt</span>' : ''}
+                        ${t.status === 'APPROVED' ? '<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-semibold">Đã duyệt</span>' : ''}
+                        ${t.status === 'REJECTED' ? '<span class="bg-red-100 text-red-700 px-2.5 py-1 rounded-full text-xs font-semibold">Từ chối</span>' : ''}
+                    </td>
+                    <td class="p-4 text-center space-x-2">
+                        ${t.status === 'PENDING' ? `
+                            <button onclick="updateTopicStatus(${t.id}, 'APPROVED')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-lg text-xs font-medium shadow-sm">Duyệt</button>
+                            <button onclick="updateTopicStatus(${t.id}, 'REJECTED')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-xs font-medium shadow-sm">Từ chối</button>
+                        ` : '<span class="text-xs text-gray-400">Đã xử lý</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderCouncils() {
+            const councils = JSON.parse(localStorage.getItem('councils')) || [];
+            const container = document.getElementById('council-list');
+
+            container.innerHTML = councils.map(c => `
+                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <h4 class="font-bold text-gray-800 text-sm">${c.name}</h4>
+                        <span class="bg-indigo-50 text-indigo-700 text-xs px-2.5 py-1 rounded-full font-medium">${c.count} Thành viên</span>
+                    </div>
+                    <div class="text-xs space-y-1.5 text-gray-600">
+                        <p><strong>Chủ tịch:</strong> ${c.president}</p>
+                        <p><strong>Thư ký:</strong> ${c.secretary}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStats() {
+            const rounds = JSON.parse(localStorage.getItem('rounds')) || [];
+            const topics = JSON.parse(localStorage.getItem('topics')) || [];
+            const councils = JSON.parse(localStorage.getItem('councils')) || [];
+
+            document.getElementById('stat-rounds').innerText = rounds.length;
+            document.getElementById('stat-topics').innerText = topics.length;
+            document.getElementById('stat-pending').innerText = topics.filter(t => t.status === 'PENDING').length;
+            document.getElementById('stat-councils').innerText = councils.length;
+        }
+
+        // CÁC THAO TÁC THÊM/XÓA/SỬA
+        function handleCreateRound(e) {
+            e.preventDefault();
+            const rounds = JSON.parse(localStorage.getItem('rounds')) || [];
+            const newRound = {
+                id: Date.now(),
+                name: document.getElementById('round-name').value,
+                type: document.getElementById('round-type').value,
+                gvStart: document.getElementById('round-gv-start').value,
+                gvEnd: document.getElementById('round-gv-end').value,
+                svStart: document.getElementById('round-sv-start').value,
+                svEnd: document.getElementById('round-sv-end').value,
+                gvpbDeadline: document.getElementById('round-gvpb-deadline').value,
+                councilDate: document.getElementById('round-council-date').value,
+            };
+
+            rounds.push(newRound);
+            localStorage.setItem('rounds', JSON.stringify(rounds));
+            closeModal('modal-add-round');
+            document.getElementById('form-create-round').reset();
+            refreshAll();
+        }
+
+        function deleteRound(id) {
+            if (!confirm('Bạn có chắc muốn xóa đợt đăng ký này?')) return;
+            let rounds = JSON.parse(localStorage.getItem('rounds')) || [];
+            rounds = rounds.filter(r => r.id !== id);
+            localStorage.setItem('rounds', JSON.stringify(rounds));
+            refreshAll();
+        }
+
+        function updateTopicStatus(id, newStatus) {
+            let topics = JSON.parse(localStorage.getItem('topics')) || [];
+            topics = topics.map(t => t.id === id ? { ...t, status: newStatus } : t);
+            localStorage.setItem('topics', JSON.stringify(topics));
+            refreshAll();
+        }
+
+        function handleCreateCouncil(e) {
+            e.preventDefault();
+            const councils = JSON.parse(localStorage.getItem('councils')) || [];
+            const newCouncil = {
+                id: Date.now(),
+                name: document.getElementById('council-name').value,
+                president: document.getElementById('council-president').value,
+                secretary: document.getElementById('council-secretary').value,
+                count: document.getElementById('council-members-count').value
+            };
+            councils.push(newCouncil);
+            localStorage.setItem('councils', JSON.stringify(councils));
+            closeModal('modal-add-council');
+            document.getElementById('form-create-council').reset();
+            refreshAll();
+        }
+
+        function handlePostAnnouncement(e) {
+            e.preventDefault();
+            alert('Đã đăng thông báo thành công lên hệ thống!');
+            document.getElementById('form-announcement').reset();
+        }
+
+        // HÀM BỔ TRỢ UI
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function refreshAll() {
+            renderRounds();
+            renderTopics();
+            renderCouncils();
+            updateStats();
+        }
+
+        // CHẠY KHI TRANG TẢI XONG
+        document.addEventListener('DOMContentLoaded', () => {
+            initStorage();
+            refreshAll();
+        });
+    </script>
+</body>
+</html>
