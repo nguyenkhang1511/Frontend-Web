@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinh Viên - Cổng Quản Lý Đề Tài</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <h2>PORTAL SINH VIÊN</h2>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active"><a href="#section-detai"><i class="fa-solid fa-book-bookmark"></i> Danh sách đề tài</a></li>
+                    <li><a href="#section-nhom"><i class="fa-solid fa-users"></i> Quản lý nhóm</a></li>
+                    <li><a href="#section-nopbai"><i class="fa-solid fa-upload"></i> Nộp báo cáo</a></li>
+                    <li><a href="#section-xemdiem"><i class="fa-solid fa-square-poll-vertical"></i> Xem điểm & Kết quả</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-user">
+                <i class="fa-solid fa-circle-user avatar"></i>
+                <div class="user-info">
+                    <span class="user-name">Trần Văn A</span>
+                    <span class="user-role">MSSV: 20120001 (Nhóm trưởng)</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <h2>Cổng Thông Tin & Đăng Ký Đề Tài Sinh Viên</h2>
+            </header>
+
+            <div class="content-body">
+                <!-- 1. BẢNG DANH SÁCH ĐỀ TÀI -->
+                <section id="section-detai" class="card-box">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-list-check"></i> Danh Sách Đề Tài Được Công Bố</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã ĐT</th>
+                                    <th>Tên Đề Tài</th>
+                                    <th>Bộ Môn</th>
+                                    <th>Giảng Viên HD</th>
+                                    <th>Số SV</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ds-detai-body">
+                                <!-- Dữ liệu từ JS sẽ tự động đổ vào đây -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 2. QUẢN LÝ NHÓM (TỐI ĐA 3 SV) -->
+                <section id="section-nhom" class="card-box">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-users-line"></i> Đăng Ký / Quản Lý Nhóm Thực Hiện (Tối đa 3 SV)</h3>
+                    </div>
+                    <div class="grid-2-col">
+                        <!-- Form Đăng Ký Nhóm -->
+                        <form id="form-tao-nhom" onsubmit="xuLyTaoNhom(event)" class="form-stack">
+                            <h4><i class="fa-solid fa-user-plus"></i> Lập nhóm mới</h4>
+                            <div class="form-group">
+                                <label>Nhóm trưởng (Mặc định)</label>
+                                <input type="text" value="20120001 - Trần Văn A" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Thành viên 2 (MSSV)</label>
+                                <input type="text" id="sv2" placeholder="Nhập MSSV thành viên 2 (VD: 20120002)...">
+                            </div>
+                            <div class="form-group">
+                                <label>Thành viên 3 (MSSV - Không bắt buộc)</label>
+                                <input type="text" id="sv3" placeholder="Nhập MSSV thành viên 3 (VD: 20120003)...">
+                            </div>
+                            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Xác Nhận Tạo Nhóm</button>
+                        </form>
+
+                        <!-- Thông tin nhóm hiện tại -->
+                        <div class="group-info-box">
+                            <h4><i class="fa-solid fa-id-card"></i> Thông tin nhóm hiện tại</h4>
+                            <p class="mb-2"><strong>Trạng thái nhóm:</strong> <span class="status-badge available">Đã đăng ký</span></p>
+                            <p class="mb-2"><strong>Đề tài đã chọn:</strong> DT-01 (Xây dựng ứng dụng quản lý...)</p>
+                            <ul class="member-list">
+                                <li><i class="fa-solid fa-user-check"></i> <strong>20120001 - Trần Văn A</strong> (Nhóm trưởng)</li>
+                                <li><i class="fa-solid fa-user"></i> 20120002 - Nguyễn Văn B (Thành viên)</li>
+                                <li><i class="fa-solid fa-user"></i> 20120003 - Lê Thị C (Thành viên)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. NỘP BÁO CÁO ĐỀ TÀI (CHỈ NHÓM TRƯỞNG) -->
+                <section id="section-nopbai" class="card-box">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-file-arrow-up"></i> Nộp Báo Cáo Đề Tài (Chỉ Nhóm Trưởng thực hiện)</h3>
+                    </div>
+                    <form id="form-nop-bao-cao" onsubmit="xuLyNopBaoCao(event)" class="form-grid">
+                        <div class="form-group span-2">
+                            <label>Tên Đề Tài Đang Thực Hiện</label>
+                            <input type="text" value="DT-01 - Xây dựng ứng dụng quản lý đề tài sinh viên dựa trên Microservices" disabled>
+                        </div>
+                        <div class="form-group span-2">
+                            <label>Chọn File Báo Cáo Final (.pdf, .zip, .rar - Max 50MB)</label>
+                            <input type="file" id="fileBaoCao" required class="file-input">
+                        </div>
+                        <div class="form-group span-2">
+                            <label>Ghi chú cho Giảng Viên / Hội Đồng</label>
+                            <textarea id="ghiChu" rows="3" placeholder="Nhập liên kết Github/Drive bổ sung hoặc lời nhắn đến GVHD..."></textarea>
+                        </div>
+                        <div class="form-actions span-2">
+                            <button type="submit" class="btn btn-success"><i class="fa-solid fa-paper-plane"></i> Gửi Báo Cáo Cuối Kỳ</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- 4. TRA CỨU ĐIỂM & KẾT QUẢ -->
+                <section id="section-xemdiem" class="card-box">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-square-poll-vertical"></i> Kết Quả Đánh Giá & Bảng Điểm</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Thành Phần Đánh Giá</th>
+                                    <th>Giảng Viên Đánh Giá</th>
+                                    <th>Thang Điểm</th>
+                                    <th>Điểm Số</th>
+                                    <th>Đánh Giá / Ghi Chú</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Điểm GV Hướng Dẫn (GVHD)</td>
+                                    <td>TS. Nguyễn Văn A</td>
+                                    <td>10</td>
+                                    <td><strong>8.5</strong></td>
+                                    <td>Đề tài hoàn thiện đúng tiến độ, sản phẩm chạy tốt.</td>
+                                </tr>
+                                <tr>
+                                    <td>Điểm GV Phản Biện (GVPB)</td>
+                                    <td>ThS. Lê Thị C</td>
+                                    <td>10</td>
+                                    <td><strong>8.0</strong></td>
+                                    <td>Báo cáo trình bày rõ ràng, cần bổ sung tài liệu API.</td>
+                                </tr>
+                                <tr>
+                                    <td>Điểm Hội Đồng Phản Biện</td>
+                                    <td>Hội đồng số 01 (Chủ tịch hội đồng)</td>
+                                    <td>10</td>
+                                    <td><strong>8.8</strong></td>
+                                    <td>Trả lời phản biện tốt, ứng dụng có tính thực tiễn cao.</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td colspan="3"><strong>ĐIỂM TRUNG BÌNH CỘNG (KẾT QUẢ CUỐI CÙNG):</strong></td>
+                                    <td colspan="2"><span class="final-score">8.43 / 10</span> — <span class="status-badge available">ĐẠT</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script nhúng đúng thứ tự -->
+    <script src="js/mock_data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
